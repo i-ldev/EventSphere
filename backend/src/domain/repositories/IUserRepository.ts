@@ -1,0 +1,11 @@
+// src/domain/repositories/IUserRepository.ts
+import { User } from '../entities/User.js';
+
+export interface IUserRepository {
+  findById(id: string): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;
+  findAll(): Promise<User[]>;
+  create(user: User): Promise<User>;
+  update(user: User): Promise<User | null>;
+  delete(id: string): Promise<boolean>;
+}
