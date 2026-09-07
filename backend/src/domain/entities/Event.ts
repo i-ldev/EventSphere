@@ -7,10 +7,16 @@ export class Event {
     public title: string,
     public description: string,
     public date: Date,
-    public venue: string, // Changed from location to venue (ID)
+    public venue: string,
     public organizerId: string,
     public status: EventStatus = EventStatus.DRAFT,
+    public category?: string,
+    public imageUrl?: string,
+    public maxCapacity: number = 50, 
+    public workspaceId?: string, 
+    public isVirtual: boolean = false, 
+    public meetingUrl?: string | null,
     public createdAt?: Date,
-    public updatedAt?: Date,
+    public updatedAt?: Date
   ) {}
 }

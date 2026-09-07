@@ -10,7 +10,9 @@ export class User {
     public firstName?: string,
     public lastName?: string,
     public isEmailVerified: boolean = false,
+    public stripeAccountId?: string | null, 
+    public workspaceId?: string | null, 
     public createdAt?: Date,
-    public updatedAt?: Date,
+    public updatedAt?: Date
   ) {}
 }

@@ -1,4 +1,4 @@
-// src/server.ts
+// backend/src/server.ts
 console.log('1. Server file started executing...');
 
 import app from './app.js';
@@ -12,9 +12,7 @@ const startServer = async () => {
 
   // 2. Start Express Server
   const server = app.listen(env.PORT, () => {
-    logger.info(
-      `🚀 EventSphere Backend running in ${env.NODE_ENV} mode on port ${env.PORT}`,
-    );
+    logger.info(`🚀 EventSphere Backend running in ${env.NODE_ENV} mode on port ${env.PORT}`);
   });
 
   // 3. Handle unhandled rejections

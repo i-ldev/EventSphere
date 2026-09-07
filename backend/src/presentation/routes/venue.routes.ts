@@ -2,6 +2,8 @@
 import { Router } from 'express';
 import { MongoVenueRepository } from '../../infrastructure/repositories/MongoVenueRepository.js';
 import { CreateVenueUseCase } from '../../application/venue/CreateVenueUseCase.js';
+import { UpdateVenueUseCase } from '../../application/venue/UpdateVenueUseCase.js';
+import { DeleteVenueUseCase } from '../../application/venue/DeleteVenueUseCase.js';
 import { GetVenuesUseCase } from '../../application/venue/GetVenuesUseCase.js';
 import { VenueController } from '../controllers/VenueController.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
@@ -10,24 +12,23 @@ import { Role } from '../../shared/enums/role.enum.js';
 
 const router = Router();
 
-// Dependency Injection
 const venueRepository = new MongoVenueRepository();
 const createVenueUseCase = new CreateVenueUseCase(venueRepository);
+const updateVenueUseCase = new UpdateVenueUseCase(venueRepository);
+const deleteVenueUseCase = new DeleteVenueUseCase(venueRepository);
 const getVenuesUseCase = new GetVenuesUseCase(venueRepository);
+
 const venueController = new VenueController(
-  createVenueUseCase,
-  getVenuesUseCase,
+  createVenueUseCase, 
+  updateVenueUseCase, 
+  deleteVenueUseCase, 
+  getVenuesUseCase
 );
 
 // Routes
-// Only ORGANIZER or SUPER_ADMIN can create venues
-router.post(
-  '/',
-  authMiddleware,
-  roleMiddleware([Role.ORGANIZER, Role.SUPER_ADMIN]),
-  venueController.create,
-);
-// Anyone can view venues
+router.post('/', authMiddleware, roleMiddleware([Role.ORGANIZER, Role.SUPER_ADMIN]), venueController.create);
+router.put('/:id', authMiddleware, roleMiddleware([Role.ORGANIZER, Role.SUPER_ADMIN]), venueController.update); // New Route
+router.delete('/:id', authMiddleware, roleMiddleware([Role.ORGANIZER, Role.SUPER_ADMIN]), venueController.delete); // New Route
 router.get('/', venueController.getAll);
 
 export default router;

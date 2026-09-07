@@ -12,6 +12,7 @@ export class MongoVenueRepository implements IVenueRepository {
       doc.capacity,
       doc.description,
       doc.equipment,
+      doc.workspaceId ? String(doc.workspaceId) : undefined, 
       doc.createdAt,
       doc.updatedAt,
     );
@@ -34,6 +35,7 @@ export class MongoVenueRepository implements IVenueRepository {
       capacity: venue.capacity,
       description: venue.description,
       equipment: venue.equipment,
+      workspaceId: venue.workspaceId,
     });
     return this.toDomainEntity(doc);
   }

@@ -3,6 +3,8 @@ import { Router } from 'express';
 import { MongoRegistrationRepository } from '../../infrastructure/repositories/MongoRegistrationRepository.js';
 import { MongoTicketTypeRepository } from '../../infrastructure/repositories/MongoTicketTypeRepository.js';
 import { MongoEventRepository } from '../../infrastructure/repositories/MongoEventRepository.js';
+import { MongoUserRepository } from '../../infrastructure/repositories/MongoUserRepository.js';
+import { MailService } from '../../infrastructure/mail/MailService.js';
 import { BuyTicketUseCase } from '../../application/registration/BuyTicketUseCase.js';
 import { GetMyRegistrationsUseCase } from '../../application/registration/GetMyRegistrationsUseCase.js';
 import { GetOrganizerStatsUseCase } from '../../application/registration/GetOrganizerStatsUseCase.js';
@@ -18,46 +20,31 @@ const router = Router();
 const registrationRepository = new MongoRegistrationRepository();
 const ticketTypeRepository = new MongoTicketTypeRepository();
 const eventRepository = new MongoEventRepository();
+const userRepository = new MongoUserRepository();
+const mailService = new MailService(); // New!
 
 const buyTicketUseCase = new BuyTicketUseCase(
-  registrationRepository,
-  ticketTypeRepository,
+  registrationRepository, 
+  ticketTypeRepository, 
   eventRepository,
+  userRepository,
+  mailService // Injected!
 );
-const getMyRegistrationsUseCase = new GetMyRegistrationsUseCase(
-  registrationRepository,
-);
-const getOrganizerStatsUseCase = new GetOrganizerStatsUseCase(
-  registrationRepository,
-);
-const checkInAttendeeUseCase = new CheckInAttendeeUseCase(
-  registrationRepository,
-  eventRepository,
-);
+const getMyRegistrationsUseCase = new GetMyRegistrationsUseCase(registrationRepository);
+const getOrganizerStatsUseCase = new GetOrganizerStatsUseCase(registrationRepository);
+const checkInAttendeeUseCase = new CheckInAttendeeUseCase(registrationRepository, eventRepository);
 
 const registrationController = new RegistrationController(
-  buyTicketUseCase,
-  getMyRegistrationsUseCase,
+  buyTicketUseCase, 
+  getMyRegistrationsUseCase, 
   getOrganizerStatsUseCase,
-  checkInAttendeeUseCase,
+  checkInAttendeeUseCase
 );
 
 // Routes
 router.post('/', authMiddleware, registrationController.buyTicket);
 router.get('/my-tickets', authMiddleware, registrationController.getMyTickets);
-router.get(
-  '/stats',
-  authMiddleware,
-  roleMiddleware([Role.ORGANIZER, Role.SUPER_ADMIN]),
-  registrationController.getOrganizerStats,
-);
-
-// Check-in route (Organizers and Staff only)
-router.put(
-  '/:id/check-in',
-  authMiddleware,
-  roleMiddleware([Role.ORGANIZER, Role.STAFF, Role.SUPER_ADMIN]),
-  registrationController.checkInAttendee,
-);
+router.get('/stats', authMiddleware, roleMiddleware([Role.ORGANIZER, Role.SUPER_ADMIN]), registrationController.getOrganizerStats);
+router.put('/:id/check-in', authMiddleware, roleMiddleware([Role.ORGANIZER, Role.STAFF, Role.SUPER_ADMIN]), registrationController.checkInAttendee);
 
 export default router;

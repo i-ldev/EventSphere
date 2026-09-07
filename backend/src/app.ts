@@ -11,6 +11,11 @@ import venueRouter from './presentation/routes/venue.routes.js';
 import ticketRouter from './presentation/routes/ticket.routes.js';
 import registrationRouter from './presentation/routes/registration.routes.js';
 import reviewRouter from './presentation/routes/review.routes.js';
+import aiRouter from './presentation/routes/ai.routes.js'; // <-- Add this
+import categoryRouter from './presentation/routes/category.routes.js'; 
+import paymentRouter from './presentation/routes/payment.routes.js'; // <-- Add this
+import workspaceRouter from './presentation/routes/workspace.routes.js'; // <-- Add this
+
 const app = express();
 
 // Security & Parsing Middlewares
@@ -34,6 +39,10 @@ app.use('/api/v1/venues', venueRouter);
 app.use('/api/v1/events', ticketRouter);
 app.use('/api/v1/registrations', registrationRouter);
 app.use('/api/v1/events', reviewRouter);
+app.use('/api/v1/ai', aiRouter);
+app.use('/api/v1/categories', categoryRouter);
+app.use('/api/v1/payments', paymentRouter); 
+app.use('/api/v1/workspaces', workspaceRouter); 
 // 404 Handler
 app.use((req: Request, res: Response) => {
   res.status(404).json({

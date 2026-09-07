@@ -4,7 +4,6 @@ import { User } from '../../domain/entities/User.js';
 import { UserModel, IUserDocument } from '../database/models/UserModel.js';
 
 export class MongoUserRepository implements IUserRepository {
-  // Helper function to convert Mongo doc to Domain Entity
   private toDomainEntity(doc: IUserDocument): User {
     return new User(
       String(doc._id),
@@ -14,8 +13,10 @@ export class MongoUserRepository implements IUserRepository {
       doc.firstName,
       doc.lastName,
       doc.isEmailVerified,
+      doc.stripeAccountId,
+      doc.workspaceId, // <-- MUST BE HERE
       doc.createdAt,
-      doc.updatedAt,
+      doc.updatedAt
     );
   }
 
@@ -31,7 +32,7 @@ export class MongoUserRepository implements IUserRepository {
 
   async findAll(): Promise<User[]> {
     const docs = await UserModel.find();
-    return docs.map((doc) => this.toDomainEntity(doc));
+    return docs.map(doc => this.toDomainEntity(doc));
   }
 
   async create(user: User): Promise<User> {
@@ -42,6 +43,8 @@ export class MongoUserRepository implements IUserRepository {
       firstName: user.firstName,
       lastName: user.lastName,
       isEmailVerified: user.isEmailVerified,
+      stripeAccountId: user.stripeAccountId,
+      workspaceId: user.workspaceId, // <-- MUST BE HERE
     });
     return this.toDomainEntity(doc);
   }
@@ -56,8 +59,10 @@ export class MongoUserRepository implements IUserRepository {
         firstName: user.firstName,
         lastName: user.lastName,
         isEmailVerified: user.isEmailVerified,
+        stripeAccountId: user.stripeAccountId,
+        workspaceId: user.workspaceId, // <-- MUST BE HERE
       },
-      { new: true },
+      { new: true }
     );
     return doc ? this.toDomainEntity(doc) : null;
   }

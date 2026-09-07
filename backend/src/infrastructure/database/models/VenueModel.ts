@@ -18,6 +18,7 @@ const venueSchema = new Schema<IVenueDocument>(
     capacity: { type: Number, required: true, default: 100 },
     description: { type: String, trim: true },
     equipment: { type: [String], default: [] },
+    workspaceId: { type: Schema.Types.ObjectId, ref: 'Workspace', default: null }, 
   },
   { timestamps: true },
 );

@@ -8,6 +8,7 @@ export interface CreateVenueDTO {
   capacity: number;
   description?: string;
   equipment: string[];
+  workspaceId?: string; // Add this
 }
 
 export class CreateVenueUseCase {
@@ -21,6 +22,7 @@ export class CreateVenueUseCase {
       dto.capacity,
       dto.description,
       dto.equipment,
+      dto.workspaceId // Add this
     );
 
     return await this.venueRepository.create(newVenue);

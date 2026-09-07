@@ -14,6 +14,8 @@ export interface PopulatedRegistration {
     title: string;
     date: string;
     location: string;
+    isVirtual?: boolean;
+    meetingUrl?: string | null;
   };
   ticketTypeId: string;
   userId: string;

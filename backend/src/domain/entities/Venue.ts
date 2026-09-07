@@ -7,6 +7,7 @@ export class Venue {
     public capacity: number,
     public description?: string,
     public equipment: string[] = [],
+    public workspaceId?: string, 
     public createdAt?: Date,
     public updatedAt?: Date,
   ) {}

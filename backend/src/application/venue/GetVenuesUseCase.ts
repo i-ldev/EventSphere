@@ -5,7 +5,7 @@ import { IVenueRepository } from '../../domain/repositories/IVenueRepository.js'
 export class GetVenuesUseCase {
   constructor(private venueRepository: IVenueRepository) {}
 
-  async execute(): Promise<Venue[]> {
-    return await this.venueRepository.findAll();
+  async execute(workspaceId?: string): Promise<Venue[]> {
+    return await this.venueRepository.findAll(workspaceId);
   }
 }
